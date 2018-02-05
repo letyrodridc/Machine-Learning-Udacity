@@ -1,0 +1,149 @@
+\documentclass[a4paper,10pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{indentfirst}
+
+\renewcommand{\thesection}{\thechapter.\number\numexpr\value{section}-1\relax}
+\renewcommand{\thesubsection}{\thesection.\number\numexpr\value{subsection}-1\relax}
+\renewcommand{\thesubsubsection}{\thesubsection.\number\numexpr\value{subsubsection}-1\relax}
+\setcounter{secnumdepth}{3}
+
+\setcounter{chapter}{1}% Not using chapters, but they're used in the counters
+\setcounter{section}{1}
+\title{Automated Groceries Fridge Storage}
+\author{Leticia Lorena Rodr\'iguez}
+
+
+\begin{document}
+
+\maketitle 
+
+\section{Domain Background}
+
+Nowadays, there is huge advancements in Robotics that helps in Supermarkets fulfilling orders, checking, and maitaining stock. Those product are bought for millions people and took it into their home. \\
+
+At home, the groceries storage is done item by item by a human where one of the most important decision is to determine the proper storage of each product according the places in the home and the conservation requirements of the product.\\
+
+This task consumes time. My particular interest is to build technology that help to carry out each of the household tasks. \\
+
+\section{Problem Statement}
+
+At home, the storage of grocery products could be simplify to: this item should go in the freedge or not. To perserve the concervation chain, some products need to be stored in the refrigerator.\\
+
+The idea is to solve the problem using Deep Learning. \\
+
+\section{Data sets and Inputs}
+
+There are few grocery products dataset over the web ready for Deep Learning. One example is "The Freiburg Groceries Dataset" consists of 5000 256x256 RGB images of 25 food classes. Some sample images:
+
+
+But the images includes several products. \\
+
+The "Precios Cuidados" products dataset is going to be used. "Precios Cuidados" is an argentinian initiative that collects prices of different supermarket in order to protect the rights of the buyers.
+
+The product's images could be downloaded using a public API.
+
+
+\section{Solution statement}
+
+The objective of the present work is to analyze and provide a Convolutional Neural Network that could serve as a starting point of the robot software.\\
+
+This CNN should detect using a product image if the item should be stored in the refrigerator or not. The approach will be to select the best CNN between building a network from strach.\\
+
+\section{Benchmark Model}
+
+This is a novel project. No previous work on fridge/non-fridge products detection is available online. To benchmark the network solution, a model with tranfer learning InceptionV3 or ResNet50 could be use.
+
+InceptionV3 and ResNet50 pre-trained models were generated over ImageNet dataset during weeks. As we have seen in the Dog Breed project, their performance in other domains excells. 
+
+\section{Evaluation Metrics}
+
+The accuracy will be used to meassure the success of the network. Also, during the traning, the loss and validation loss progress will be checked to provided an accurate model without underfitted or overfitted conditions.\\
+
+
+\section{Project Design}
+
+The project will need to accomplish the following points:
+
+* Dataset preparation
+
+* Algorithms and Techniques description
+
+* Benchmark Model (transfer learning model)
+
+* CNN from scratch 
+
+* Model Evaluation
+
+
+\subsection{Dataset preparation}
+
+* Includes to download and resize the "Precios Cuidados" images.
+
+* Apply data augmentation 
+
+* Separate the data in train-validation-test
+
+* Complete Data Exploration and Exploratory Visualization report sections.
+
+\subsection{Benchmark Model}
+
+* Extract ResNet50 and InceptionV3 bottleneck features.
+
+* Use the simple model from Dog Breed Classifier project applied over the dataset
+
+%\code {
+%transfer_learning_model = Sequential()
+%transfer_learning_model.add(GlobalAveragePooling2D(input_shape=bottleneck_features.shape[1:]))
+%transfer_learning_model.add(Dense(2, activation='softmax'))
+
+%transfer_learning_model.summary()
+%} 
+
+* Train using: rmsprop optimizer and categorical\_crossentropy loss (bi-categorical) 
+
+* Complete Benchmark model report section.
+
+\subsection{CNN Model}
+
+* Implement a Neural Network from scratch
+
+* Select loss function and optimizer. Different optimizers could be tried: Adamax, Adam, RMSProp
+
+* Adjust the hyperparameters to increase accuracy
+
+
+\subsection{Model Evaluation}
+
+* Compare the best CNN Model with the Benchmark Model
+
+* Use the CNN for prediting in 10 sample images at least
+
+
+\section{Refereces}
+%https://www.fastcodesign.com/90150368/this-online-supermarkets-robots-put-your-order-together-in-minutes
+%https://www.technologyreview.com/s/603229/the-robotic-grocery-store-of-the-future-is-here/
+%http://aisdatasets.informatik.uni-freiburg.de/freiburg_groceries_dataset/
+%https://arxiv.org/pdf/1611.05799.pdf
+%https://www.preciosclaros.gob.ar/#!/buscar-productos
+
+\begin{thebibliography}{9}
+\bibitem{latexcompanion} 
+Michel Goossens, Frank Mittelbach, and Alexander Samarin. 
+\textit{The \LaTeX\ Companion}. 
+Addison-Wesley, Reading, Massachusetts, 1993.
+ 
+\bibitem{einstein} 
+Albert Einstein. 
+\textit{Zur Elektrodynamik bewegter K{\"o}rper}. (German) 
+[\textit{On the electrodynamics of moving bodies}]. 
+Annalen der Physik, 322(10):891–921, 1905.
+ 
+\bibitem{knuthwebsite} 
+Knuth: Computers and Typesetting,
+\\\texttt{http://www-cs-faculty.stanford.edu/\~{}uno/abcde.html}
+\end{thebibliography}
+ 
+
+\end{document}
