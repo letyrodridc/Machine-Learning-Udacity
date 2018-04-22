@@ -1,0 +1,260 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\title{Automated Groceries Storage: Fridge or Non-Fridge decision}
+
+\begin{document}
+
+\maketitle 
+
+\section{Definition}
+
+\subsection{Project Overview}
+
+%Student provides a high-level overview of the project in layman’s terms. Background information such as the problem domain, the project origin, and related data sets or input data is given.
+
+This project is an approximation of detecting if a product should be stored in the fridge or not. \\
+
+Nowadays, time is limited, human have a lot of amount of work to do and thinking in system that could help in everyday tasks is the next step in the human evolution.\\
+
+Some initiatives in Computer Vision and Deep Learning for detecting products where propopsed. See "The Freiburg Groceries DataSet" Philipp Jund at el. \cite{freiburgpaper} . Those are focussed in helping big retailers in product storage. \\
+
+This project uses the "Precios Claros" Dataset. It's an argentian public database that store information of retailers products including price, category, picture, etc. Only the images will be used and the objective is based in the product shape determine if it should be stored in the fridge or not.\\
+
+
+\subsection{Problem Statement}
+%The problem which needs to be solved is clearly defined. A strategy for solving the problem, including discussion of the expected solution, has been made.
+
+This project proposes a way to detect if a grocery product should be stored on the fridge or not based on the shape. There are no other works in the field about this problem.\\ 
+
+The solution proposed uses Convolutional Neural Networks. Two approaches were considered: using transfer learning and an original CNN from the scratch.\\
+
+The expectation is that the model build from the scratch could beat in accuracy the pre-trained model.\\
+
+\subsection{Metrics}
+
+At training time, the accuracy will be used to measure the success of the network. Also, the loss and validation loss progress will be checked to provided an accurate model without underfitting or overfitting conditions.\\
+
+The final score will be given by the \textbf{F1-score} over the test dataset.
+
+
+\section{Data Exploration}
+
+The Precios Claros Dataset is composed by 4685 images of grocery products. All the images have only 1 product and they have white background. The image is clear.  Each image is RGB and the dimension are 240x240. \\
+
+All the products were classified in fridge or non-fridge according the storage requirements.\\
+
+
+\subsection{Exploratory Visualization}
+% If a dataset is present, features and calculated statistics relevant to the problem have been reported and discussed, along with a sampling of the data. In lieu of a dataset, a thorough description of the input space or input data has been made. Abnormalities or characteristics about the data or input that need to be addressed have been identified.
+
+Some products could be either. For example, a closed soda could be stored in the fridge or not. The criteria in this case is to store it in the fridge. \\
+
+Here are some sample images:
+
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{products2.png}
+  \caption{Precios Claros Dataset}
+  \label{fig:boat1}
+\end{figure}
+
+The statistics of the clases is the following:
+
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{classes_distribution.png}
+  \caption{Precios Claros Classes Distribution}
+  \label{fig:boat1}
+\end{figure}
+
+Notice that most of the products are non-fridge products.
+
+
+\subsection{Algorithms and Techniques}
+% Algorithms and techniques used in the project are thoroughly discussed and properly justified based on the characteristics of the problem.
+
+This project is solved using Deep Learning. The techiques applied are:
+
+\begin{itemize}
+  \item Data Augmentation
+  \item Transfer Learning
+  \item Convolutional Neural Networks
+  \item Dropout
+  \item Hyperparameters tuning
+  \item Optimizer selection
+\end{itemize}
+
+\subsubsection{Data Augmentation}
+
+Data Augmentation is a techinique broadly used to prevent overfitting and increment the training data. The idea is to provide of different processing over the images in the dataset like scale, rotations, etc. \\
+
+For example, if you apply data augmentation over the Precios Claros dataset we can have:
+
+  
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{data_augmentation.png}
+  \caption{Data Augmentation}
+\end{figure}
+
+\subsubsection{Transfer learning}
+
+Transfer learning is a very useful techinique in deep learning that let us use the previous trained model in our data. \\
+
+Models that were trained for weeks and on multiple GPU could be used over new data to make a prediction with amazing results. \\
+
+\subsubsection{Convolutional Neural Networks}
+
+CNN are a kind of Neural Networks mainly used in Computer Vision. It consist in applying convolution operations over an image pixel to create filters that extract different features/characteristic of an image. For example, borders, lines, etc. \\
+
+
+\subsubsection{Dropout}
+
+Consist in randomly disable some of the units in a Neural Network layer. It uses a probability to decide if the node (unit) needs to be disabled. \\ 
+ 
+\subsubsection{Hyperparameters tuning}
+
+The accuracy of a neural network will depends on different paramters:
+
+\begin{itemize}
+  \item Learning Rate
+  \item Number of Layers
+  \item Batch Size
+  \item Number of Units/kernel/strides in the convolutional layer
+  \item Dropout probability in the Dropout layers
+\end{itemize}
+
+\subsubsection{Optimizer selection}
+
+Optimizer play a fundamental role in learning. The classic Stochastic Gradient Descent algorithm had many improvements. One of them was the adding of momentum, then a Adam, Adamax, and Adagrad new techniques. \\
+
+
+\subsection{Benchmark}
+
+% Student clearly defines a benchmark result or threshold for comparing performances of solutions obtained.
+
+The Benchmark model is a VGG16 transfer learning model. The accuracy is : 47.10\%
+
+The network structure is defined: 
+
+\begin{figure}[ht]
+  \includegraphics[width=\linewidth]{vgg16_model.png}
+  \caption{VGG16 Model}
+\end{figure}
+
+
+The prediction is very bad. 
+
+\begin{figure}[ht]
+  \includegraphics[width=\linewidth]{vgg16_results.png}
+  \caption{VGG16 Bechmark Model results - in uppercase the correct label}
+\end{figure}
+
+
+\section{Methodology}
+
+\subsection{Data Preprocessing}
+% All preprocessing steps have been clearly documented. Abnormalities or characteristics about the data or input that needed to be addressed have been corrected. If no data preprocessing is necessary, it has been clearly justified.
+
+The Precios Claros dataset provides 4685 clear images. As it was discussed before Data Augmentation will be used to increase the performance of the Neural Networks. Usually, training over more data allow us to get better results. \\
+
+Also, for using Transfer Learning, the images should be resized (VGG16 uses 224x224x3 images) and the bottleneck extracted. \\
+
+The other preparation required is the separation between train, valid, and test set. \\
+
+The complete pre-processing is summarized in this graph: 
+  
+\begin{figure}[ht]
+  \includegraphics[width=\linewidth]{data_processing.png}
+  \caption{Data preparation flow}
+  \label{fig:boat1}
+\end{figure}
+
+
+\subsection{Implementation}
+% The process for which metrics, algorithms, and techniques were implemented with the given datasets or input data has been thoroughly documented. Complications that occurred during the coding process are discussed.
+
+The main issue was the data aumentation implementation. The idea was to generate all the images in memory. The flow method finally allowed me to do that.\\ 
+
+
+For improving benchmark results, a CNN from the scratch was implemented. The technique uses a Convolutional Neural Network followed by a Max Pooling layer. \\
+
+Dropout layers were used to prevent overfitting. \\ 
+
+\begin{figure}[ht]
+  \includegraphics[width=\linewidth]{my_net.png}
+  \caption{Data preparation flow}
+  \label{fig:boat1}
+\end{figure}
+
+\subsection{Refinement}
+
+% The process of improving upon the algorithms and techniques used is clearly documented. Both the initial and final solutions are reported, along with intermediate solutions, if necessary.
+
+The new network was trained for 300 epochs using Model Checkpoint to save the best model weights. \\
+
+The learning rate 0.0001 in Adamax optimizer. Others learning rate, 0.05, 0.01, 0.001 were tried but the best results were in a slow learning. \\
+
+The batch size that best worked was 64. Other values like 32, 128 were tried without outperform the selected parameter value.\\
+
+The optimizer selection was delicate. I first started with a stochastic gradient descent and finally, changes to Adamax that it's an improved optimizer. \\
+
+\section{Results}
+
+\subsection{Model Evaluation and Validation}
+
+% The final model’s qualities — such as parameters — are evaluated in detail. Some type of analysis is used to validate the robustness of the model’s solution.
+
+\subsection{Justification}
+
+% The final results are compared to the benchmark result or threshold with some type of statistical analysis. Justification is made as to whether the final model and solution is significant enough to have adequately solved the problem.
+
+
+
+\section{Conclusion}
+
+\subsection{Free-Form Visualization}
+
+% A visualization has been provided that emphasizes an important quality about the project with thorough discussion. Visual cues are clearly defined.
+
+
+\subsection{Reflection}
+
+% Student adequately summarizes the end-to-end problem solution and discusses one or two particular aspects of the project they found interesting or difficult.
+
+
+\subsection{Improvement}
+
+	
+% Discussion is made as to how one aspect of the implementation could be improved. Potential solutions resulting from these improvements are considered and compared/contrasted to the current solution.
+
+\begin{thebibliography}{9}
+\bibitem{supermarketrobots} 
+\textit{Super Market Robots}. 
+\url{https://www.fastcodesign.com/90150368/this-online-supermarkets-robots-put-your-order-together-in-minutes} 
+
+\bibitem{preciosclaros} 
+\textit{Precios Claros} 
+\url{https://www.preciosclaros.gob.ar/\#!/buscar-productos}
+ 
+\bibitem{freiburg} 
+\textit{Freiburg groceries dataset} 
+\url{http://aisdatasets.informatik.uni-freiburg.de/freiburg\_groceries\_dataset/}
+
+\bibitem{freiburgpaper} 
+\textit{Freiburg groceries paper}
+\url{https://arxiv.org/abs/1611.05799} 
+
+\bibitem{vgg16}
+\textit{VGG16 Paper}
+\url{https://arxiv.org/abs/1409.1556}
+
+
+\end{thebibliography}
+ 
+
+\end{document}

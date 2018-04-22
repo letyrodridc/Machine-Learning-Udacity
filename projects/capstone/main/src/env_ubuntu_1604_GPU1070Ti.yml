@@ -3,12 +3,18 @@ channels:
   - defaults
 dependencies:
   - ca-certificates=2017.08.26=h1d4fec5_0
+  - h5py=2.6.0=np111py34_2
+  - hdf5=1.8.17=2
+  - intel-openmp=2018.0.0=hc7b2577_8
   - libgcc-ng=7.2.0=hdf63c60_3
+  - mkl=2017.0.4=h4c4d0af_0
+  - numpy=1.11.3=py34_0
   - openssl=1.0.2n=hb7f436b_0
   - pip=9.0.1=py34_1
   - python=3.4.5=0
   - readline=6.2=2
   - setuptools=27.2.0=py34_0
+  - six=1.10.0=py34_0
   - sqlite=3.13.0=0
   - tk=8.5.18=0
   - wheel=0.29.0=py34_0
@@ -47,7 +53,6 @@ dependencies:
     - nbconvert==5.3.1
     - nbformat==4.4.0
     - notebook==5.4.1
-    - numpy==1.14.2
     - opencv-contrib-python==3.4.0.12
     - pandocfilters==1.4.2
     - parso==0.1.1
@@ -68,7 +73,6 @@ dependencies:
     - scipy==1.0.0
     - send2trash==1.5.0
     - simplegeneric==0.8.1
-    - six==1.11.0
     - sklearn==0.0
     - tensorboard==1.6.0
     - tensorflow-gpu==1.4.0
