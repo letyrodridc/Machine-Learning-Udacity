@@ -6,6 +6,8 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{hyperref}
+%\usepackage{fontspec}
+%\setmainfont{Ubuntu Mono}
 
 \title{Automated Groceries Storage: Fridge or Non-Fridge decision}
 
@@ -23,9 +25,9 @@ This project is an approximation of detecting if a product should be stored in t
 
 Nowadays, time is limited, human have a lot of amount of work to do and thinking in system that could help in everyday tasks is the next step in the human evolution.\\
 
-Some initiatives in Computer Vision and Deep Learning for detecting products where propopsed. See "The Freiburg Groceries DataSet" Philipp Jund at el. \cite{freiburgpaper} . Those are focussed in helping big retailers in product storage. \\
+Some initiatives in Computer Vision and Deep Learning for detecting products were proposed. See "The Freiburg Groceries DataSet" Philipp Jund at el. \cite{freiburgpaper} . Those are focussed in helping big retailers in product storage. \\
 
-This project uses the "Precios Claros" Dataset. It's an argentian public database that store information of retailers products including price, category, picture, etc. Only the images will be used and the objective is based in the product shape determine if it should be stored in the fridge or not.\\
+This project uses the "Precios Claros" Dataset. It's a public database that store information of retailers products including price, category, picture, etc. Only the images will be used and the objective is based in the product shape determine if it should be stored in the fridge or not.\\
 
 
 \subsection{Problem Statement}
@@ -41,39 +43,50 @@ The expectation is that the model build from the scratch could beat in accuracy 
 
 At training time, the accuracy will be used to measure the success of the network. Also, the loss and validation loss progress will be checked to provided an accurate model without underfitting or overfitting conditions.\\
 
-The final score will be given by the \textbf{F1-score} over the test dataset.
+The final score will be given by the \textbf{F1-score} over the test dataset. \\
+
+The F1-Score will be calculated using this formula: \\
+
+$F1\_Score = 2 \times \frac{Precision \times Recall}{Precision+Recall}$ \\
+
+The Precision will indicate the percentage of products we are storing correctly in the fridge. The formula will be: \\
+
+$Precision = \frac{Predicted Fridge|Fridge}{Predicted Fridge|Fridge+Predicted Fridge|Non\_Fridge}$ \\
+
+The Recall is going to be definined around the fridge products. We are interested in correctly store them in the fridge and non of them should be out of it. That would lead in the wasting of the product. \\
+
+$Recall = \frac{Predicted Fridge|Fridge}{Predicted Fridge|Fridge+Predicted Non\_Fridge|Fridge}$ \\
 
 
 \section{Data Exploration}
 
+\subsection{Exploratory Visualization}
+% If a dataset is present, features and calculated statistics relevant to the problem have been reported and discussed, along with a sampling of the data. In lieu of a dataset, a thorough description of the input space or input data has been made. Abnormalities or characteristics about the data or input that need to be addressed have been identified.
 The Precios Claros Dataset is composed by 4685 images of grocery products. All the images have only 1 product and they have white background. The image is clear.  Each image is RGB and the dimension are 240x240. \\
 
 All the products were classified in fridge or non-fridge according the storage requirements.\\
-
-
-\subsection{Exploratory Visualization}
-% If a dataset is present, features and calculated statistics relevant to the problem have been reported and discussed, along with a sampling of the data. In lieu of a dataset, a thorough description of the input space or input data has been made. Abnormalities or characteristics about the data or input that need to be addressed have been identified.
 
 Some products could be either. For example, a closed soda could be stored in the fridge or not. The criteria in this case is to store it in the fridge. \\
 
 Here are some sample images:
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \includegraphics[width=\linewidth]{products2.png}
   \caption{Precios Claros Dataset}
-  \label{fig:boat1}
 \end{figure}
+
+\newpage
 
 The statistics of the clases is the following:
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \includegraphics[width=\linewidth]{classes_distribution.png}
   \caption{Precios Claros Classes Distribution}
-  \label{fig:boat1}
 \end{figure}
 
-Notice that most of the products are non-fridge products.
+\newpage
 
+Notice that most of the products are non-fridge products.
 
 \subsection{Algorithms and Techniques}
 % Algorithms and techniques used in the project are thoroughly discussed and properly justified based on the characteristics of the problem.
@@ -91,15 +104,17 @@ This project is solved using Deep Learning. The techiques applied are:
 
 \subsubsection{Data Augmentation}
 
-Data Augmentation is a techinique broadly used to prevent overfitting and increment the training data. The idea is to provide of different processing over the images in the dataset like scale, rotations, etc. \\
+Data Augmentation is a techinique broadly used to prevent overfitting and to increment the training data. The idea is to increment the data by processing the images in the dataset like scales, rotations, etc. \\
 
 For example, if you apply data augmentation over the Precios Claros dataset we can have:
 
   
-\begin{figure}[h]
+\begin{figure}[ht]
   \includegraphics[width=\linewidth]{data_augmentation.png}
   \caption{Data Augmentation}
 \end{figure}
+
+\newpage
 
 \subsubsection{Transfer learning}
 
@@ -109,16 +124,18 @@ Models that were trained for weeks and on multiple GPU could be used over new da
 
 \subsubsection{Convolutional Neural Networks}
 
-CNN are a kind of Neural Networks mainly used in Computer Vision. It consist in applying convolution operations over an image pixel to create filters that extract different features/characteristic of an image. For example, borders, lines, etc. \\
+CNN are a kind of Neural Networks mainly used in Computer Vision. It consist in applying convolution operations over an image pixels to create filters that extract different features/characteristic of an image. For example, borders, lines, etc. \\
 
 
 \subsubsection{Dropout}
 
-Consist in randomly disable some of the units in a Neural Network layer. It uses a probability to decide if the node (unit) needs to be disabled. \\ 
+Consist in randomly disable some of the units in a Neural Network layer. It uses a probability to decide if the node (unit) needs to be disabled. \\
+
+This will let the NN to not stick to a fixed architecture and don't get stuck in characteristics that can be shared by some nodes. \\
  
 \subsubsection{Hyperparameters tuning}
 
-The accuracy of a neural network will depends on different paramters:
+The accuracy of a neural network will depends on different parameters:
 
 \begin{itemize}
   \item Learning Rate
@@ -137,23 +154,45 @@ Optimizer play a fundamental role in learning. The classic Stochastic Gradient D
 
 % Student clearly defines a benchmark result or threshold for comparing performances of solutions obtained.
 
-The Benchmark model is a VGG16 transfer learning model. The accuracy is : 47.10\%
+The Benchmark model is a VGG16 transfer learning model. \\ 
 
-The network structure is defined: 
+The network structure is defined:  \\
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \includegraphics[width=\linewidth]{vgg16_model.png}
   \caption{VGG16 Model}
 \end{figure}
 
 
-The prediction is very bad. 
+The accuracy of the model is: 51.56\%
 
-\begin{figure}[ht]
-  \includegraphics[width=\linewidth]{vgg16_results.png}
-  \caption{VGG16 Bechmark Model results - in uppercase the correct label}
-\end{figure}
+\begin{center}
+\begin{tabular}{ |c|c|c|c| } 
+ \hline
+       & fridge prediction & no-fridge prediction & total by category \\ 
+ \hline
+ fridge & 17 & 45 & 62 \\ 
+ non-fridge & 17 & 49 & 66 \\ 
+ \hline
+ Total by prediction & 34 & 94 & \\ 
+ \hline
+ 
+\end{tabular}
+\end{center}
 
+How many of the products predicted to go to the fridge actually needs to go in the fridge?
+Precision: 50.00\% \\
+
+Of the fridge items, how many were correctly predicted
+Recall: 27.42\% \\
+
+\noindent\fbox{
+\parbox{\textwidth}{
+\begin{center}
+F1-Score: 0.35
+\end{center}
+}
+}
 
 \section{Methodology}
 
@@ -171,10 +210,9 @@ The complete pre-processing is summarized in this graph:
 \begin{figure}[ht]
   \includegraphics[width=\linewidth]{data_processing.png}
   \caption{Data preparation flow}
-  \label{fig:boat1}
 \end{figure}
 
-
+\newpage
 \subsection{Implementation}
 % The process for which metrics, algorithms, and techniques were implemented with the given datasets or input data has been thoroughly documented. Complications that occurred during the coding process are discussed.
 
@@ -209,28 +247,108 @@ The optimizer selection was delicate. I first started with a stochastic gradient
 
 % The final model’s qualities — such as parameters — are evaluated in detail. Some type of analysis is used to validate the robustness of the model’s solution.
 
+The accuracy of the model is: 62.32\%
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c| } 
+ \hline
+       & fridge prediction & no-fridge prediction & total by category \\ 
+ \hline
+ fridge & 29 & 40 & 69 \\ 
+ non-fridge & 12 & 57 & 69 \\ 
+ \hline
+ Total by prediction & 41 & 97 & \\ 
+ \hline
+ 
+\end{tabular}
+\end{center}
+
+How many of the products predicted to go to the fridge actually needs to go in the fridge?
+Precision: 70.73\% \\
+
+Of the fridge items, how many were correctly predicted
+Recall: 42.03\% \\
+
+\noindent\fbox{
+\parbox{\textwidth}{
+\begin{center}
+F1-Score: 0.53
+\end{center}
+}
+}
+
+
 \subsection{Justification}
 
 % The final results are compared to the benchmark result or threshold with some type of statistical analysis. Justification is made as to whether the final model and solution is significant enough to have adequately solved the problem.
 
+The final model is a good aproach to solve the fridge or non-fridge product storage. \\
 
+In the next graph, we are going to compare accuracy, precision, and recall.\\
+
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{stats1.png}
+  \caption{VGG16 Model}
+\end{figure}
+
+
+All the values were highly improved by the new model. Recall is important to avoid false negative. It's important that we can correctly store all the fridge product. \\
+
+The new model works better and the reason could be related to the dropout layers, and the optimizer chosen. \\ 
+
+Finally, if we compare the F1\_score clearly the new model outperforms the benchmark model. \\ 
+
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{stats2.png}
+  \caption{VGG16 Model}
+\end{figure}
+
+
+
+\newpage
 
 \section{Conclusion}
-
+ 
 \subsection{Free-Form Visualization}
 
 % A visualization has been provided that emphasizes an important quality about the project with thorough discussion. Visual cues are clearly defined.
+
+
+After training, we can review the resutls. They aren't very good.
+
+\begin{figure}[ht]
+  \includegraphics[width=\linewidth]{vgg16_results.png}
+  \caption{VGG16 Bechmark Model results - in uppercase the correct label}
+\end{figure}
+
+\newpage
+
+They are a little bit better if we consider the new proposed model.
+\begin{figure}[ht]
+  \includegraphics[width=\linewidth]{my_net_results.png}
+  \caption{Proposed Model results - in uppercase the correct label}
+\end{figure}
+
+\newpage
 
 
 \subsection{Reflection}
 
 % Student adequately summarizes the end-to-end problem solution and discusses one or two particular aspects of the project they found interesting or difficult.
 
+The solution proposed is better than the benchmark but no better enough. It's important to realize that a product left out of the bridge could be wasted so it's important to have a high accuracy in fridge products. \\
+
+The new model does a good work. If we take a look at the precision, the 70\% of the products that requieres cold will be correctly stored. However, this is not enough. The 30\% of our products will be wasted and that's not good at all. \\
+
 
 \subsection{Improvement}
-
-	
 % Discussion is made as to how one aspect of the implementation could be improved. Potential solutions resulting from these improvements are considered and compared/contrasted to the current solution.
+
+The problem is hard in its definition. Maybe, just looking the package is not enough information for making a decision. \\
+
+However, the results are quite interesting. A close analysis over the 30\% missclassified fridge products could be performed to develop algorithms that let us increase the accuracy. \\
+
+Also, some transfer learning advanced model could be used like ResNet50 or Xception and compared to the proposed model. 
 
 \begin{thebibliography}{9}
 \bibitem{supermarketrobots} 
